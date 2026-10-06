@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#6f7742">
+  <title>Cotizador YuranSnacks</title>
+  <style>
+    :root {
+      --oliva: #6f7742;
+      --oliva-oscuro: #4f572d;
+      --oliva-suave: #e8ecd9;
+      --arena: #f1e7d3;
+      --arena-oscuro: #d8c6a7;
+      --blanco: #ffffff;
+      --texto: #2f3522;
+      --texto-suave: #6e725f;
+      --borde: #dedbcf;
+      --error: #a84343;
+      --sombra: 0 10px 30px rgba(79, 87, 45, 0.10);
+      --radio: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--arena) 0%, #f7f4ed 100%);
+      color: var(--texto);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      padding: 18px 14px 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .brand-mark {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 8px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--oliva);
+      color: var(--blanco);
+      font-size: 24px;
+      font-weight: 800;
+      box-shadow: var(--sombra);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(25px, 6vw, 32px);
+      line-height: 1.05;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 7px 0 0;
+      color: var(--texto-suave);
+      font-size: 14px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(216, 198, 167, 0.72);
+      border-radius: var(--radio);
+      padding: 16px;
+      box-shadow: var(--sombra);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field:last-of-type {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    select,
+    input {
+      width: 100%;
+      min-height: 50px;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      padding: 0 14px;
+      background: var(--blanco);
+      color: var(--texto);
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: var(--oliva);
+      box-shadow: 0 0 0 3px rgba(111, 119, 66, 0.12);
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      padding-right: 50px;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--texto-suave);
+      font-size: 13px;
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .channel-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+
+    .channel-option {
+      position: relative;
+    }
+
+    .channel-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .channel-option label {
+      margin: 0;
+      min-height: 52px;
+      padding: 12px 13px;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--blanco);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.16s ease;
+    }
+
+    .radio-dot {
+      flex: 0 0 18px;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--arena-oscuro);
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .channel-option input:checked + label {
+      border-color: var(--oliva);
+      background: var(--oliva-suave);
+    }
+
+    .channel-option input:checked + label .radio-dot {
+      border-color: var(--oliva);
+    }
+
+    .channel-option input:checked + label .radio-dot::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--oliva);
+    }
+
+    .channel-price {
+      margin-left: auto;
+      white-space: nowrap;
+      color: var(--oliva-oscuro);
+      font-size: 13px;
+    }
+
+    .error {
+      min-height: 20px;
+      margin: 2px 2px 10px;
+      color: var(--error);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.12s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:active {
+      transform: scale(0.985);
+    }
+
+    .btn-primary {
+      background: var(--oliva);
+      color: var(--blanco);
+    }
+
+    .btn-primary:hover,
+    .btn-copy:hover {
+      filter: brightness(0.97);
+    }
+
+    .btn-copy {
+      background: var(--arena);
+      color: var(--oliva-oscuro);
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 15px;
+      border-radius: 16px;
+      background: var(--oliva-suave);
+      border: 1px solid rgba(111, 119, 66, 0.16);
+    }
+
+    .result-title {
+      margin: 0 0 11px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .summary {
+      margin: 0;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .total {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 13px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(79, 87, 45, 0.24);
+    }
+
+    .total-label {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .total-value {
+      color: var(--oliva-oscuro);
+      font-size: 27px;
+      font-weight: 950;
+    }
+
+    .copy-wrap {
+      margin-top: 12px;
+    }
+
+    .copy-status {
+      margin-top: 8px;
+      text-align: center;
+      min-height: 18px;
+      color: var(--texto-suave);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin: 12px 0 0;
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 11px;
+    }
+
+    @media (min-width: 430px) {
+      .channel-options {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .channel-option label {
+        min-height: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="brand-mark" aria-hidden="true">Y</div>
+      <h1>Cotizador YuranSnacks</h1>
+      <p class="subtitle">Calcula tu pedido en segundos y compártelo por WhatsApp.</p>
+    </header>
+
+    <section class="card" aria-label="Formulario de cotización">
+      <div class="field">
+        <label for="producto">Producto</label>
+        <select id="producto">
+          <option value="barra_kiwicha" data-precio="8">Barra Kiwicha y Cacao — S/ 8</option>
+          <option value="barra_quinua" data-precio="7">Barra Quinua Original — S/ 7</option>
+          <option value="pack_kiwicha" data-precio="35">Pack x5 Kiwicha y Cacao — S/ 35</option>
+          <option value="pack_quinua" data-precio="30">Pack x5 Quinua Original — S/ 30</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="cantidad">Cantidad</label>
+        <div class="input-wrap">
+          <input id="cantidad" type="number" min="1" step="1" value="1" inputmode="numeric" aria-describedby="cantidadAyuda">
+          <span class="input-suffix">unid.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Canal de entrega</label>
+        <div class="channel-options">
+          <div class="channel-option">
+            <input type="radio" id="recojo" name="canal" value="0" checked>
+            <label for="recojo">
+              <span class="radio-dot" aria-hidden="true"></span>
+              <span>Recojo en punto de venta</span>
+              <span class="channel-price">+ S/ 0</span>
+            </label>
+          </div>
+
+          <div class="channel-option">
+            <input type="radio" id="delivery" name="canal" value="5">
+            <label for="delivery">
+              <span class="radio-dot" aria-hidden="true"></span>
+              <span>Delivery en Lima</span>
+              <span class="channel-price">+ S/ 5</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div id="error" class="error" role="alert" aria-live="polite"></div>
+
+      <button id="calcularBtn" class="btn btn-primary" type="button">Calcular</button>
+
+      <section id="resultado" class="result" hidden aria-live="polite">
+        <h2 class="result-title">Resumen del pedido</h2>
+        <p id="resumen" class="summary"></p>
+
+        <div class="total">
+          <span class="total-label">Total a pagar</span>
+          <span id="total" class="total-value">S/ 0.00</span>
+        </div>
+
+        <div class="copy-wrap">
+          <button id="copiarBtn" class="btn btn-copy" type="button">Copiar resumen</button>
+          <div id="copyStatus" class="copy-status" aria-live="polite"></div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer-note">Precios fijos · Sin registro · Funciona directamente en tu navegador</p>
+  </main>
+
+  <script>
+    const productoSelect = document.getElementById("producto");
+    const cantidadInput = document.getElementById("cantidad");
+    const calcularBtn = document.getElementById("calcularBtn");
+    const copiarBtn = document.getElementById("copiarBtn");
+    const resultado = document.getElementById("resultado");
+    const resumenEl = document.getElementById("resumen");
+    const totalEl = document.getElementById("total");
+    const errorEl = document.getElementById("error");
+    const copyStatus = document.getElementById("copyStatus");
+
+    let textoParaCopiar = "";
+
+    function soles(valor) {
+      return `S/ ${valor.toFixed(2)}`;
+    }
+
+    function obtenerCanal() {
+      const seleccionado = document.querySelector('input[name="canal"]:checked');
+      return {
+        nombre: seleccionado.id === "delivery" ? "Delivery en Lima" : "Recojo en punto de venta",
+        costo: Number(seleccionado.value)
+      };
+    }
+
+    function calcular() {
+      errorEl.textContent = "";
+      copyStatus.textContent = "";
+
+      const opcion = productoSelect.options[productoSelect.selectedIndex];
+      const producto = opcion.textContent.split(" — ")[0];
+      const precioUnitario = Number(opcion.dataset.precio);
+      const cantidad = Number(cantidadInput.value);
+      const canal = obtenerCanal();
+
+      if (!Number.isInteger(cantidad) || cantidad < 1) {
+        resultado.hidden = true;
+        errorEl.textContent = "Ingresa una cantidad entera de 1 o más.";
+        cantidadInput.focus();
+        return;
+      }
+
+      const subtotal = precioUnitario * cantidad;
+      const total = subtotal + canal.costo;
+
+      const lineas = [
+        `Producto: ${producto}`,
+        `Cantidad: ${cantidad}`,
+        `Precio por unidad: ${soles(precioUnitario)}`,
+        `Subtotal: ${soles(subtotal)}`,
+        `Entrega: ${canal.nombre} (${canal.costo === 0 ? "sin costo adicional" : "+ S/ 5.00"})`,
+        ``,
+        `TOTAL: ${soles(total)}`
+      ];
+
+      textoParaCopiar = [
+        "Cotización YuranSnacks",
+        "",
+        ...lineas
+      ].join("\n");
+
+      resumenEl.textContent = lineas.join("\n");
+      totalEl.textContent = soles(total);
+      resultado.hidden = false;
+    }
+
+    async function copiarResumen() {
+      if (!textoParaCopiar) return;
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(textoParaCopiar);
+        } else {
+          const area = document.createElement("textarea");
+          area.value = textoParaCopiar;
+          area.setAttribute("readonly", "");
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          area.style.pointerEvents = "none";
+          document.body.appendChild(area);
+          area.select();
+          area.setSelectionRange(0, area.value.length);
+          const ok = document.execCommand("copy");
+          area.remove();
+          if (!ok) throw new Error("No se pudo copiar");
+        }
+
+        copyStatus.textContent = "✓ Resumen copiado. Ya puedes pegarlo en WhatsApp.";
+      } catch (error) {
+        copyStatus.textContent = "No se pudo copiar automáticamente. Selecciona y copia el resumen manualmente.";
+      }
+    }
+
+    calcularBtn.addEventListener("click", calcular);
+    copiarBtn.addEventListener("click", copiarResumen);
+
+    cantidadInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        calcular();
+      }
+    });
+
+    cantidadInput.addEventListener("input", () => {
+      errorEl.textContent = "";
+      copyStatus.textContent = "";
+    });
+
+    document.querySelectorAll('input[name="canal"], #producto').forEach((elemento) => {
+      elemento.addEventListener("change", () => {
+        copyStatus.textContent = "";
+      });
+    });
+  </script>
+</body>
+</html>
